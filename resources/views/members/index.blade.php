@@ -25,6 +25,8 @@
                     <th>Tempat Lahir</th>
                     <th>Tanggal Lahir</th>
                     <th>No KTP</th>
+                    <th>Tinggi (cm)</th>
+                    <th>Berat (kg)</th>
                     <th>Email</th>
                     <th>Telepon</th>
                     <th>Aksi</th>
@@ -39,6 +41,8 @@
                         <td>{{ $member->birth_place ?? '-' }}</td>
                         <td>{{ $member->birth_date }}</td>
                         <td>{{ $member->no_ktp }}</td>
+                        <td>{{ $member->height ?? '-' }}</td>
+                        <td>{{ $member->weight ?? '-' }}</td>
                         <td>{{ $member->email }}</td>
                         <td>{{ $member->phone }}</td>
                         <td>

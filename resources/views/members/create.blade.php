@@ -50,6 +50,16 @@
             <label class="form-label">No KTP:</label>
             <input type="text" name="no_ktp" class="form-control" value="{{ old('no_ktp', $member->no_ktp ?? '') }}" maxlength="16" required>
         </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Tinggi Badan (cm):</label>
+                <input type="number" name="height" class="form-control" value="{{ old('height', $member->height ?? '') }}" min="0">
+            </div>
+            <div class="col">
+                <label class="form-label">Berat Badan (kg):</label>
+                <input type="number" name="weight" class="form-control" value="{{ old('weight', $member->weight ?? '') }}" min="0">
+            </div>
+        </div>
         <div class="mb-3">
             <label class="form-label">Email:</label>
             <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>

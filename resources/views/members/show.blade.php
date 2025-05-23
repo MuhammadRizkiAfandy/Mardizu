@@ -14,6 +14,8 @@
             <p class="card-text"><strong>Tempat Lahir:</strong> {{ $member->birth_place ?? '-' }}</p>
             <p class="card-text"><strong>Tanggal Lahir:</strong> {{ $member->birth_date ?? '-' }}</p>
             <p class="card-text"><strong>No KTP:</strong> {{ $member->no_ktp }}</p>
+            <p class="card-text"><strong>Tinggi Badan:</strong> {{ $member->height }} cm</p>
+            <p class="card-text"><strong>Berat Badan:</strong> {{ $member->weight }} kg</p>
             <p class="card-text"><strong>Email:</strong> {{ $member->email }}</p>
             <p class="card-text"><strong>Telepon:</strong> {{ $member->phone ?? '-' }}</p>
         </div>

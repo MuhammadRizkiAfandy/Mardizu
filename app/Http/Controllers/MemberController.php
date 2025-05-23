@@ -40,6 +40,8 @@ class MemberController extends Controller
             'birth_place' => 'nullable|string|max:100',
             'birth_date' => 'nullable|date',
             'no_ktp' => ['required', 'digits:16'],
+            'height' => ['nullable', 'integer', 'min:0'],
+            'weight' => ['nullable', 'integer', 'min:0'],
         ]);
 
         // Simpan data member baru
