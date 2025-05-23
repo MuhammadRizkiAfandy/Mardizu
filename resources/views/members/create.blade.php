@@ -43,6 +43,10 @@
             <input type="text" name="birth_place" class="form-control" value="{{ old('birth_place', $member->birth_place ?? '') }}">
         </div>
         <div class="mb-3">
+            <label class="form-label">Tanggal Lahir:</label>
+            <input type="date" name="birth_date" class="form-control" value="{{ old('birth_date', $member->birth_date ?? '') }}">
+        </div>
+        <div class="mb-3">
             <label class="form-label">Email:</label>
             <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
         </div>
