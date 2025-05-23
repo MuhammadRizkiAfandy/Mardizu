@@ -33,10 +33,11 @@ class MemberController extends Controller
     {
         // Validasi input
         $request->validate([
-            'name'   => 'required|string|max:255',
-            'email'  => 'required|email|unique:members,email',
-            'phone'  => 'nullable|string|max:20',
-            'gender' => 'required|in:Laki-laki,Perempuan',
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|unique:members,email,' . ($member->id ?? 'NULL'),
+            'phone'       => 'nullable|regex:/^[0-9]+$/',
+            'gender'      => 'required|in:Laki-laki,Perempuan',
+            'birth_place' => 'nullable|string|max:100',
         ]);
 
         // Simpan data member baru

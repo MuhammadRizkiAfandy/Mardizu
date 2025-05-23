@@ -40,6 +40,10 @@
             </div>
         </div>
         <div class="mb-3">
+            <label class="form-label">Tempat Lahir:</label>
+            <input type="text" name="birth_place" class="form-control" value="{{ old('birth_place', $member->birth_place ?? '') }}">
+        </div>
+        <div class="mb-3">
             <label class="form-label">Email:</label>
             <input type="email" name="email" class="form-control" value="{{ old('email', $member->email) }}" required>
         </div>

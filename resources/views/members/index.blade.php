@@ -22,6 +22,7 @@
                     <th>No</th>
                     <th>Nama</th>
                     <th>Jenis Kelamin</th>
+                    <th>Tempat Lahir</th>
                     <th>Email</th>
                     <th>Telepon</th>
                     <th>Aksi</th>
@@ -33,6 +34,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $member->name }}</td>
                         <td>{{ $member->gender }}</td>
+                        <td>{{ $member->birth_place ?? '-' }}</td>
                         <td>{{ $member->email }}</td>
                         <td>{{ $member->phone }}</td>
                         <td>
