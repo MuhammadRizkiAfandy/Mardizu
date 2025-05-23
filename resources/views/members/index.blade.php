@@ -21,6 +21,7 @@
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
+                    <th>Jenis Kelamin</th>
                     <th>Email</th>
                     <th>Telepon</th>
                     <th>Aksi</th>
@@ -31,6 +32,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $member->name }}</td>
+                        <td>{{ $member->gender }}</td>
                         <td>{{ $member->email }}</td>
                         <td>{{ $member->phone }}</td>
                         <td>

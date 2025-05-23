@@ -10,5 +10,6 @@ class Member extends Model
     use HasFactory;
 
     // Tentukan kolom yang boleh diisi secara mass assignment
-    protected $fillable = ['name', 'email', 'phone'];
+    protected $fillable = ['name', 'email', 'phone', 'gender'];
+
 }

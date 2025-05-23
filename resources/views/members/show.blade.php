@@ -10,6 +10,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ $member->name }}</h5>
+            <p class="card-text"><strong>Jenis Kelamin:</strong> {{ $member->gender }}</p>
             <p class="card-text"><strong>Email:</strong> {{ $member->email }}</p>
             <p class="card-text"><strong>Telepon:</strong> {{ $member->phone ?? '-' }}</p>
         </div>

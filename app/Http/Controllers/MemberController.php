@@ -33,17 +33,18 @@ class MemberController extends Controller
     {
         // Validasi input
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:members,email',
-            'phone' => 'nullable|string|max:20',
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|unique:members,email',
+            'phone'  => 'nullable|string|max:20',
+            'gender' => 'required|in:Laki-laki,Perempuan',
         ]);
 
         // Simpan data member baru
         Member::create($request->all());
 
-        // Redirect ke halaman daftar member dengan pesan sukses
         return redirect()->route('members.index')->with('success', 'Member berhasil ditambahkan');
     }
+
 
     /**
      * Display the specified resource.
@@ -71,15 +72,15 @@ class MemberController extends Controller
     {
         // Validasi input update
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:members,email,' . $member->id,
-            'phone' => 'nullable|string|max:20',
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|unique:members,email,' . $member->id,
+            'phone' => ['nullable', 'regex:/^[0-9]+$/'],
+            'gender' => 'required|in:Laki-laki,Perempuan',
         ]);
 
         // Update data member
         $member->update($request->all());
 
-        // Redirect dengan pesan sukses
         return redirect()->route('members.index')->with('success', 'Member berhasil diupdate');
     }
 
