@@ -27,8 +27,8 @@
                     <th>No KTP</th>
                     <th>Tinggi (cm)</th>
                     <th>Berat (kg)</th>
-                    <th>Email</th>
                     <th>Telepon</th>
+                    <th>Email</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -43,8 +43,8 @@
                         <td>{{ $member->no_ktp }}</td>
                         <td>{{ $member->height ?? '-' }}</td>
                         <td>{{ $member->weight ?? '-' }}</td>
-                        <td>{{ $member->email }}</td>
                         <td>{{ $member->phone }}</td>
+                        <td>{{ $member->email }}</td>
                         <td>
                             <a href="{{ route('members.show', $member->id) }}" class="btn btn-info btn-sm">Detail</a>
                             <a href="{{ route('members.edit', $member->id) }}" class="btn btn-warning btn-sm">Edit</a>

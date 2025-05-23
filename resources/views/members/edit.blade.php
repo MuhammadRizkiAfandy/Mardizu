@@ -61,16 +61,15 @@
                 <input type="number" name="weight" class="form-control" value="{{ old('weight', $member->weight ?? '') }}" min="0">
             </div>
         </div>
+        </div>
+            <div class="mb-3">
+            <label class="form-label">Telepon:</label>
+            <input type="text" name="phone" class="form-control" value="{{ old('phone') }}">
+        </div>
         <div class="mb-3">
             <label class="form-label">Email:</label>
-            <input type="email" name="email" class="form-control" value="{{ old('email', $member->email) }}" required>
+            <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">Telepon:</label>
-            <input type="text" name="phone" class="form-control" value="{{ old('phone', $member->phone) }}">
-        </div>
-
         <button type="submit" class="btn btn-primary">Perbarui</button>
     </form>
 </body>
