@@ -39,6 +39,7 @@ class MemberController extends Controller
             'gender'      => 'required|in:Laki-laki,Perempuan',
             'birth_place' => 'nullable|string|max:100',
             'birth_date' => 'nullable|date',
+            'no_ktp' => ['required', 'digits:16'],
         ]);
 
         // Simpan data member baru

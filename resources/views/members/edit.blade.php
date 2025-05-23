@@ -48,6 +48,10 @@
             <input type="date" name="birth_date" class="form-control" value="{{ old('birth_date', $member->birth_date ?? '') }}">
         </div>
         <div class="mb-3">
+            <label class="form-label">No KTP:</label>
+            <input type="text" name="no_ktp" class="form-control" value="{{ old('no_ktp', $member->no_ktp ?? '') }}" maxlength="16" required>
+        </div>
+        <div class="mb-3">
             <label class="form-label">Email:</label>
             <input type="email" name="email" class="form-control" value="{{ old('email', $member->email) }}" required>
         </div>
