@@ -2,16 +2,17 @@
 <html>
 <head>
     <title>Edit Member</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Edit Member</h1>
+<body class="container mt-5">
+    <h1 class="mb-4">Edit Member</h1>
 
-    <a href="{{ route('members.index') }}">Kembali ke Daftar Member</a>
+    <a href="{{ route('members.index') }}" class="btn btn-secondary mb-3">← Kembali ke Daftar Member</a>
 
     @if ($errors->any())
-        <div style="color: red;">
+        <div class="alert alert-danger">
             <strong>Oops! Ada masalah dengan input:</strong>
-            <ul>
+            <ul class="mb-0">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -23,23 +24,22 @@
         @csrf
         @method('PUT')
 
-        <div>
-            <label>Nama:</label><br>
-            <input type="text" name="name" value="{{ old('name', $member->name) }}" required>
+        <div class="mb-3">
+            <label class="form-label">Nama:</label>
+            <input type="text" name="name" class="form-control" value="{{ old('name', $member->name) }}" required>
         </div>
 
-        <div>
-            <label>Email:</label><br>
-            <input type="email" name="email" value="{{ old('email', $member->email) }}" required>
+        <div class="mb-3">
+            <label class="form-label">Email:</label>
+            <input type="email" name="email" class="form-control" value="{{ old('email', $member->email) }}" required>
         </div>
 
-        <div>
-            <label>Telepon:</label><br>
-            <input type="text" name="phone" value="{{ old('phone', $member->phone) }}">
+        <div class="mb-3">
+            <label class="form-label">Telepon:</label>
+            <input type="text" name="phone" class="form-control" value="{{ old('phone', $member->phone) }}">
         </div>
 
-        <br>
-        <button type="submit">Update</button>
+        <button type="submit" class="btn btn-primary">Perbarui</button>
     </form>
 </body>
 </html>

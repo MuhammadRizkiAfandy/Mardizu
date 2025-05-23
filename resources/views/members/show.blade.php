@@ -2,37 +2,19 @@
 <html>
 <head>
     <title>Detail Member</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Detail Member</h1>
+<body class="container mt-5">
+    <h1 class="mb-4">Detail Member</h1>
 
-    <a href="{{ route('members.index') }}">Kembali ke Daftar Member</a>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ $member->name }}</h5>
+            <p class="card-text"><strong>Email:</strong> {{ $member->email }}</p>
+            <p class="card-text"><strong>Telepon:</strong> {{ $member->phone ?? '-' }}</p>
+        </div>
+    </div>
 
-    <table border="1" cellpadding="5" cellspacing="0" style="margin-top: 10px;">
-        <tr>
-            <th>ID</th>
-            <td>{{ $member->id }}</td>
-        </tr>
-        <tr>
-            <th>Nama</th>
-            <td>{{ $member->name }}</td>
-        </tr>
-        <tr>
-            <th>Email</th>
-            <td>{{ $member->email }}</td>
-        </tr>
-        <tr>
-            <th>Telepon</th>
-            <td>{{ $member->phone ?? '-' }}</td>
-        </tr>
-        <tr>
-            <th>Dibuat pada</th>
-            <td>{{ $member->created_at->format('d M Y H:i') }}</td>
-        </tr>
-        <tr>
-            <th>Diupdate pada</th>
-            <td>{{ $member->updated_at->format('d M Y H:i') }}</td>
-        </tr>
-    </table>
+    <a href="{{ route('members.index') }}" class="btn btn-secondary mt-3">← Kembali ke Daftar Member</a>
 </body>
 </html>

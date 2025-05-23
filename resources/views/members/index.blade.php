@@ -2,48 +2,52 @@
 <html>
 <head>
     <title>Daftar Member</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Daftar Member</h1>
-
-    <a href="{{ route('members.create') }}">Tambah Member Baru</a>
+<body class="container mt-5">
+    <h1 class="mb-4">Daftar Member</h1>
 
     @if(session('success'))
-        <p style="color:green">{{ session('success') }}</p>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <table border="1" cellpadding="5" cellspacing="0" style="margin-top: 10px;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>Telepon</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($members as $member)
-            <tr>
-                <td>{{ $member->id }}</td>
-                <td><a href="{{ route('members.show', $member->id) }}">{{ $member->name }}</a></td>
-                <td>{{ $member->email }}</td>
-                <td>{{ $member->phone }}</td>
-                <td>
-                    <a href="{{ route('members.edit', $member->id) }}">Edit</a> |
-                    <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline-block;">
-                        @csrf
-                        @method('DELETE')
-                        <button onclick="return confirm('Yakin ingin menghapus member ini?')" type="submit">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="5" style="text-align:center;">Belum ada data member.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+    <a href="{{ route('members.create') }}" class="btn btn-success mb-3">+ Tambah Member Baru</a>
+
+    @if ($members->count() > 0)
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Telepon</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($members as $index => $member)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $member->name }}</td>
+                        <td>{{ $member->email }}</td>
+                        <td>{{ $member->phone }}</td>
+                        <td>
+                            <a href="{{ route('members.show', $member->id) }}" class="btn btn-info btn-sm">Detail</a>
+                            <a href="{{ route('members.edit', $member->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('members.destroy', $member->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button onclick="return confirm('Yakin ingin menghapus?')" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>Tidak ada data member.</p>
+    @endif
 </body>
 </html>
