@@ -29,6 +29,8 @@
                     <th>Berat (kg)</th>
                     <th>Telepon</th>
                     <th>Email</th>
+                    <th>Provinsi</th>
+                    <th>Kabupaten/Kota</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -45,6 +47,8 @@
                         <td>{{ $member->weight ?? '-' }}</td>
                         <td>{{ $member->phone }}</td>
                         <td>{{ $member->email }}</td>
+                        <td>{{ $member->province }}</td>
+                        <td>{{ $member->regency }}</td>
                         <td>
                             <a href="{{ route('members.show', $member->id) }}" class="btn btn-info btn-sm">Detail</a>
                             <a href="{{ route('members.edit', $member->id) }}" class="btn btn-warning btn-sm">Edit</a>

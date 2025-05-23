@@ -31,24 +31,45 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
-            'name'        => 'required|string|max:255',         
-            'gender'      => 'required|in:Laki-laki,Perempuan',
-            'birth_place' => 'nullable|string|max:100',
-            'birth_date' => 'nullable|date',
-            'no_ktp' => ['required', 'digits:16'],
-            'height' => ['nullable', 'integer', 'min:0'],
-            'weight' => ['nullable', 'integer', 'min:0'],
-            'phone'       => 'nullable|regex:/^[0-9]+$/',
-            'email'       => 'required|email|unique:members,email,' . ($member->id ?? 'NULL'),
+            'name'         => 'required|string|max:255',         
+            'gender'       => 'required|in:Laki-laki,Perempuan',
+            'birth_place'  => 'nullable|string|max:100',
+            'birth_date'   => 'nullable|date',
+            'no_ktp'       => ['required', 'digits:16'],
+            'height'       => ['nullable', 'integer', 'min:0'],
+            'weight'       => ['nullable', 'integer', 'min:0'],
+            'phone'        => ['nullable', 'regex:/^[0-9]+$/'],
+            'email'        => 'required|email|unique:members,email',
+            'province_id'  => 'required',
+            'regency_id'   => 'required',
         ]);
 
-        // Simpan data member baru
-        Member::create($request->all());
+        // Ambil nama provinsi dan kabupaten dari API
+        $provinceData = @file_get_contents("https://emsifa.github.io/api-wilayah-indonesia/api/province/{$request->province_id}.json");
+        $regencyData  = @file_get_contents("https://emsifa.github.io/api-wilayah-indonesia/api/regency/{$request->regency_id}.json");
+
+        $provinceName = optional(json_decode($provinceData))->name;
+        $regencyName  = optional(json_decode($regencyData))->name;
+
+        // Simpan data
+        Member::create([
+            'name'        => $request->name,
+            'gender'      => $request->gender,
+            'birth_place' => $request->birth_place,
+            'birth_date'  => $request->birth_date,
+            'no_ktp'      => $request->no_ktp,
+            'height'      => $request->height,
+            'weight'      => $request->weight,
+            'phone'       => $request->phone,
+            'email'       => $request->email,
+            'province'    => $provinceName,
+            'regency'     => $regencyName,
+        ]);
 
         return redirect()->route('members.index')->with('success', 'Member berhasil ditambahkan');
     }
+
 
 
     /**
@@ -75,19 +96,35 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        // Validasi input update
         $request->validate([
-            'name'   => 'required|string|max:255',
-            'email'  => 'required|email|unique:members,email,' . $member->id,
-            'phone' => ['nullable', 'regex:/^[0-9]+$/'],
-            'gender' => 'required|in:Laki-laki,Perempuan',
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|unique:members,email,' . $member->id,
+            'phone'       => ['nullable', 'regex:/^[0-9]+$/'],
+            'gender'      => 'required|in:Laki-laki,Perempuan',
+            'province_id' => 'required',
+            'regency_id'  => 'required',
         ]);
 
-        // Update data member
-        $member->update($request->all());
+        // Ambil nama provinsi dan kabupaten
+        $provinceData = @file_get_contents("https://emsifa.github.io/api-wilayah-indonesia/api/province/{$request->province_id}.json");
+        $regencyData  = @file_get_contents("https://emsifa.github.io/api-wilayah-indonesia/api/regency/{$request->regency_id}.json");
+
+        $provinceName = optional(json_decode($provinceData))->name;
+        $regencyName  = optional(json_decode($regencyData))->name;
+
+        // Update data
+        $member->update([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
+            'gender'   => $request->gender,
+            'province' => $provinceName,
+            'regency'  => $regencyName,
+        ]);
 
         return redirect()->route('members.index')->with('success', 'Member berhasil diupdate');
     }
+
 
     /**
      * Remove the specified resource from storage.

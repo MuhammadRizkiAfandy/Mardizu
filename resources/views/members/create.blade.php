@@ -4,6 +4,42 @@
     <title>Tambah Member Baru</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Muat data provinsi saat halaman dimuat
+    fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+        .then(response => response.json())
+        .then(data => {
+            let provinceSelect = document.getElementById('province');
+            data.forEach(function (prov) {
+                let option = document.createElement('option');
+                option.value = prov.id;
+                option.text = prov.name;
+                provinceSelect.appendChild(option);
+            });
+        });
+
+    // Saat provinsi dipilih, muat kabupaten/kota
+    document.getElementById('province').addEventListener('change', function () {
+        let provId = this.value;
+        let regencySelect = document.getElementById('regency');
+        regencySelect.innerHTML = '<option value="">-- Pilih Kabupaten/Kota --</option>';
+
+        if (provId) {
+            fetch('https://www.emsifa.com/api-wilayah-indonesia/api/regencies/' + provId + '.json')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(function (regency) {
+                        let option = document.createElement('option');
+                        option.value = regency.id;
+                        option.text = regency.name;
+                        regencySelect.appendChild(option);
+                    });
+                });
+        }
+    });
+});
+</script>
 <body class="container mt-5">
     <h1 class="mb-4">Tambah Member Baru</h1>
 
@@ -67,6 +103,20 @@
         <div class="mb-3">
             <label class="form-label">Email:</label>
             <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Provinsi:</label>
+                <select id="province" name="province_id" class="form-select" required>
+                    <option value="">-- Pilih Provinsi --</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Kabupaten/Kota:</label>
+                <select id="regency" name="regency_id" class="form-select" required>
+                    <option value="">-- Pilih Kabupaten/Kota --</option>
+                </select>
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">Simpan</button>
     </form>

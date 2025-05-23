@@ -18,9 +18,10 @@
             <p class="card-text"><strong>Berat Badan:</strong> {{ $member->weight }} kg</p>
             <p class="card-text"><strong>Telepon:</strong> {{ $member->phone ?? '-' }}</p>
             <p class="card-text"><strong>Email:</strong> {{ $member->email }}</p>
+            <p><strong>Provinsi:</strong> {{ $member->province }}</p>
+            <p><strong>Kabupaten/Kota:</strong> {{ $member->regency }}</p>
         </div>
     </div>
-
     <a href="{{ route('members.index') }}" class="btn btn-secondary mt-3">← Kembali ke Daftar Member</a>
 </body>
 </html>
