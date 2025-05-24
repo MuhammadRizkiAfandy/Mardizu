@@ -6,6 +6,5 @@ use App\Http\Controllers\MemberController;
 Route::resource('members', MemberController::class);
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/members/create');
 });
-
