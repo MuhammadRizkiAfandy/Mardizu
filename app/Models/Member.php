@@ -10,6 +10,7 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
+        'vaccine_certificate',
         'name',
         'gender',
         'birth_place',

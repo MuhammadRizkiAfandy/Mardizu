@@ -23,24 +23,27 @@ class MemberController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi input
         $validated = $request->validate([
-            'name'            => 'required|string|max:255',
-            'gender'          => 'required|in:Laki-laki,Perempuan',
-            'birth_place'     => 'required|string|max:100',
-            'birth_date'      => 'required|date',
-            'no_ktp'          => 'required|digits:16|unique:members,no_ktp',
-            'height'          => ['required', 'integer', 'min:0'],
-            'weight'          => ['required', 'integer', 'min:0'],
-            'phone'           => ['required', 'regex:/^[0-9]+$/'],
-            'email'           => 'required|email|unique:members,email',
-            'photo'           => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'province_id'     => 'required|integer',
-            'regency_id'      => 'required|integer',
-            'graduation_year' => 'required|integer|between:2000,2029',
-            'experience'      => 'nullable|string|max:255',
+            'vaccine_certificate' => 'required|file|mimes:pdf|max:2048',
+            'name'                => 'required|string|max:255',
+            'gender'              => 'required|in:Laki-laki,Perempuan',
+            'birth_place'         => 'required|string|max:100',
+            'birth_date'          => 'required|date',
+            'no_ktp'              => 'required|digits:16|unique:members,no_ktp',
+            'height'              => ['required', 'integer', 'min:0'],
+            'weight'              => ['required', 'integer', 'min:0'],
+            'phone'               => ['required', 'regex:/^[0-9]+$/'],
+            'email'               => 'required|email|unique:members,email',
+            'photo'               => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'province_id'         => 'required|integer',
+            'regency_id'          => 'required|integer',
+            'graduation_year'     => 'required|integer|between:2000,2029',
+            'experience'          => 'nullable|string|max:255',
         ]);
 
         try {
+            // Ambil nama provinsi dan kabupaten dari API
             $province = Http::timeout(5)->get("https://emsifa.github.io/api-wilayah-indonesia/api/province/{$request->province_id}.json");
             $regency  = Http::timeout(5)->get("https://emsifa.github.io/api-wilayah-indonesia/api/regency/{$request->regency_id}.json");
 
@@ -54,21 +57,32 @@ class MemberController extends Controller
             return back()->withErrors(['error' => 'Terjadi kesalahan saat mengakses API wilayah: ' . $e->getMessage()])->withInput();
         }
 
+        // Siapkan data yang akan disimpan
         $data = $validated;
-        $data['province'] = $provinceName;
-        $data['regency'] = $regencyName;
+        $data['province']  = $provinceName;
+        $data['regency']   = $regencyName;
         $data['experience'] = $request->experience;
+
+        // Simpan file foto
+        // Baru
         if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/photos'), $filename);
-            $data['photo'] = $filename;
+            $path = $request->file('photo')->store('photos', 'public');
+            $data['photo'] = $path;
         }
 
+        // Simpan file sertifikat vaksin
+        if ($request->hasFile('vaccine_certificate')) {
+            $path = $request->file('vaccine_certificate')->store('vaccine_certificates', 'public');
+            $data['vaccine_certificate'] = $path;
+        }
+
+        // Simpan data member ke database
         Member::create($data);
 
+        // Redirect ke halaman index dengan pesan sukses
         return redirect()->route('members.index')->with('success', 'Member berhasil ditambahkan');
     }
+
 
     public function show($id)
     {
@@ -89,6 +103,7 @@ class MemberController extends Controller
     public function update(Request $request, Member $member)
     {
         $validated = $request->validate([
+            'vaccine_certificate' => 'required|file|mimes:pdf|max:2048',
             'name'            => 'required|string|max:255',
             'gender'          => 'required|in:Laki-laki,Perempuan',
             'birth_place'     => 'required|string|max:100',
@@ -124,10 +139,13 @@ class MemberController extends Controller
         $data['regency'] = $regencyName;
         $data['experience'] = $request->experience;
         if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/photos'), $filename);
-            $data['photo'] = $filename;
+            $path = $request->file('photo')->store('photos', 'public');
+            $data['photo'] = $path;
+        }
+
+        if ($request->hasFile('vaccine_certificate')) {
+            $path = $request->file('vaccine_certificate')->store('vaccine_certificates', 'public');
+            $member->vaccine_certificate = $path;
         }
 
         $member->update($data);

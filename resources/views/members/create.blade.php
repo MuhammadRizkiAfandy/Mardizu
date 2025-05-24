@@ -26,6 +26,16 @@
         @csrf
 
         <div class="mb-3">
+            <label for="vaccine_certificate" class="form-label">Upload Sertifikat Vaksin (PDF):</label>
+            <input type="file" name="vaccine_certificate" id="vaccine_certificate" class="form-control" accept=".pdf*" onchange="previewVaccineCertificate()">
+            <small class="form-text text-muted">Maksimal ukuran 2MB. Format: PDF</small>
+        </div>
+
+        <div class="mb-3" id="vaccine-preview-container">
+            <div id="vaccine-placeholder">Belum ada preview.</div>
+        </div>
+
+        <div class="mb-3">
             <label for="name" class="form-label">Nama:</label>
             <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
         </div>
@@ -133,7 +143,7 @@
         <button type="submit" class="btn btn-primary">Simpan</button>
     </form>
 
-    <!-- JQuery harus dimuat dulu sebelum Select2 -->
+    <!-- Script -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -144,63 +154,72 @@
 
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
+            reader.onload = e => preview.src = e.target.result;
             reader.readAsDataURL(file);
         } else {
             preview.src = "https://via.placeholder.com/200x250?text=Preview+Foto";
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function previewVaccineCertificate() {
+        const file = document.getElementById("vaccine_certificate").files[0];
+        const container = document.getElementById("vaccine-preview-container");
+
+        container.innerHTML = "";
+
+        if (file) {
+            if (file.type === "application/pdf") {
+                container.innerHTML = `<embed src="${URL.createObjectURL(file)}" type="application/pdf" width="100%" height="400px">`;
+            } else if (file.type.startsWith("image/")) {
+                container.innerHTML = `<img src="${URL.createObjectURL(file)}" class="img-thumbnail" style="max-width:300px;">`;
+            } else {
+                container.innerHTML = `<div class="text-danger">Format tidak didukung.</div>`;
+            }
+        } else {
+            container.innerHTML = `<div id="vaccine-placeholder">Belum ada preview.</div>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
         const provinceSelect = document.getElementById('province');
         const regencySelect = document.getElementById('regency');
 
-        function loadRegencies(provinceId, selectedRegencyId = null) {
+        const loadRegencies = (provinceId, selectedRegency = null) => {
             regencySelect.innerHTML = '<option value="">-- Pilih Kabupaten/Kota --</option>';
             if (!provinceId) return;
 
             fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
-                    data.forEach(function(regency) {
-                        let option = document.createElement('option');
-                        option.value = regency.id;
-                        option.text = regency.name;
+                    data.forEach(reg => {
+                        const option = document.createElement('option');
+                        option.value = reg.id;
+                        option.text = reg.name;
                         regencySelect.appendChild(option);
                     });
-                    if (selectedRegencyId) {
-                        regencySelect.value = selectedRegencyId;
-                    }
-                })
-                .catch(() => {
-                    alert('Gagal memuat data kabupaten/kota.');
+                    if (selectedRegency) regencySelect.value = selectedRegency;
                 });
-        }
+        };
 
         fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                data.forEach(function(prov) {
-                    let option = document.createElement('option');
+                data.forEach(prov => {
+                    const option = document.createElement('option');
                     option.value = prov.id;
                     option.text = prov.name;
                     provinceSelect.appendChild(option);
                 });
 
-                const oldProvinceId = "{{ old('province_id') }}";
-                if (oldProvinceId) {
-                    provinceSelect.value = oldProvinceId;
-                    loadRegencies(oldProvinceId, "{{ old('regency_id') }}");
+                const oldProvince = "{{ old('province_id') }}";
+                if (oldProvince) {
+                    provinceSelect.value = oldProvince;
+                    loadRegencies(oldProvince, "{{ old('regency_id') }}");
                 }
-            })
-            .catch(() => {
-                alert('Gagal memuat data provinsi.');
             });
 
-        provinceSelect.addEventListener('change', function () {
-            loadRegencies(this.value);
+        provinceSelect.addEventListener('change', () => {
+            loadRegencies(provinceSelect.value);
         });
 
         $('#experience').select2({
