@@ -19,6 +19,7 @@ class Member extends Model
         'weight',
         'phone',
         'email',
+        'photo',
         'province',
         'regency',
         'graduation_year',

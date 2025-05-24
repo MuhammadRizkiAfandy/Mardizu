@@ -9,6 +9,13 @@
 
     <div class="card">
         <div class="card-body">
+            <div class="col-md-4 text-center">
+                @if ($member->photo)
+                    <img src="{{ asset('uploads/photos/' . $member->photo) }}" alt="Foto Member" class="img-thumbnail mb-3" style="max-width: 100%;">
+                @else
+                    <img src="https://via.placeholder.com/200x250?text=Tidak+Ada+Foto" alt="Tidak Ada Foto" class="img-thumbnail mb-3">
+                @endif
+            </div>
             <div class="row mb-2">
                 <div class="col-sm-4 fw-bold">Nama</div>
                 <div class="col-sm-8">{{ $member->name }}</div>

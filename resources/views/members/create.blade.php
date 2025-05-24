@@ -5,6 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
+
 <body class="container mt-5">
     <h1 class="mb-4">Tambah Member Baru</h1>
 
@@ -21,7 +22,7 @@
         </div>
     @endif
 
-    <form action="{{ route('members.store') }}" method="POST">
+    <form action="{{ route('members.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-3">
@@ -77,19 +78,27 @@
             <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
         </div>
 
+        <div class="mb-3">
+            <label for="photo" class="form-label">Upload Foto:</label>
+            <input type="file" name="photo" id="photo" class="form-control" accept="image/*" onchange="previewPhoto()" required>
+            <small class="form-text text-muted">Format yang didukung: jpg, jpeg, png. Max 2MB.</small>
+        </div>
+
+        <div class="mb-3">
+            <img id="photo-preview" src="https://via.placeholder.com/200x250?text=Preview+Foto" alt="Preview Foto" class="img-thumbnail" style="max-width: 200px;">
+        </div>
+
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="province" class="form-label">Provinsi:</label>
                 <select id="province" name="province_id" class="form-select" required>
                     <option value="">-- Pilih Provinsi --</option>
-                    {{-- option akan diisi dari JS --}}
                 </select>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="regency" class="form-label">Kabupaten/Kota:</label>
                 <select id="regency" name="regency_id" class="form-select" required>
                     <option value="">-- Pilih Kabupaten/Kota --</option>
-                    {{-- option akan diisi dari JS --}}
                 </select>
             </div>
         </div>
@@ -111,7 +120,7 @@
                     $experiences = ['Casting', 'Stamping', 'Decal', 'Operator Produksi', 'Molding', 'Machining', 'Assembling', 'Warehouse', 'Quality Control', 'Admin'];
                     $selectedExperience = old('experience', '');
                 @endphp
-                <option></option> {{-- placeholder kosong --}}
+                <option></option>
                 @foreach ($experiences as $exp)
                     <option value="{{ $exp }}" {{ $selectedExperience == $exp ? 'selected' : '' }}>
                         {{ $exp }}
@@ -129,11 +138,25 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
+    function previewPhoto() {
+        const file = document.getElementById("photo").files[0];
+        const preview = document.getElementById("photo-preview");
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "https://via.placeholder.com/200x250?text=Preview+Foto";
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const provinceSelect = document.getElementById('province');
         const regencySelect = document.getElementById('regency');
 
-        // Fungsi untuk load daftar kabupaten/kota berdasarkan provinsi
         function loadRegencies(provinceId, selectedRegencyId = null) {
             regencySelect.innerHTML = '<option value="">-- Pilih Kabupaten/Kota --</option>';
             if (!provinceId) return;
@@ -156,7 +179,6 @@
                 });
         }
 
-        // Load provinsi dari API
         fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
             .then(response => response.json())
             .then(data => {
@@ -167,7 +189,6 @@
                     provinceSelect.appendChild(option);
                 });
 
-                // Set old value jika ada
                 const oldProvinceId = "{{ old('province_id') }}";
                 if (oldProvinceId) {
                     provinceSelect.value = oldProvinceId;
@@ -182,7 +203,6 @@
             loadRegencies(this.value);
         });
 
-        // Init Select2 untuk pengalaman kerja, single select dengan tagging (boleh ketik custom experience)
         $('#experience').select2({
             placeholder: "Pilih atau ketik pengalaman kerja",
             allowClear: true,

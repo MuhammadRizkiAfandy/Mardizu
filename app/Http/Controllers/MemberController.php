@@ -33,6 +33,7 @@ class MemberController extends Controller
             'weight'          => ['required', 'integer', 'min:0'],
             'phone'           => ['required', 'regex:/^[0-9]+$/'],
             'email'           => 'required|email|unique:members,email',
+            'photo'           => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'province_id'     => 'required|integer',
             'regency_id'      => 'required|integer',
             'graduation_year' => 'required|integer|between:2000,2029',
@@ -57,6 +58,12 @@ class MemberController extends Controller
         $data['province'] = $provinceName;
         $data['regency'] = $regencyName;
         $data['experience'] = $request->experience;
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/photos'), $filename);
+            $data['photo'] = $filename;
+        }
 
         Member::create($data);
 
@@ -91,6 +98,7 @@ class MemberController extends Controller
             'weight'          => ['required', 'integer', 'min:0'],
             'phone'           => ['required', 'regex:/^[0-9]+$/'],
             'email'           => 'required|email|unique:members,email,' . $member->id,
+            'photo'           => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'province_id'     => 'required|integer',
             'regency_id'      => 'required|integer',
             'graduation_year' => 'required|integer|between:2000,2029',
@@ -115,6 +123,12 @@ class MemberController extends Controller
         $data['province'] = $provinceName;
         $data['regency'] = $regencyName;
         $data['experience'] = $request->experience;
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/photos'), $filename);
+            $data['photo'] = $filename;
+        }
 
         $member->update($data);
 
