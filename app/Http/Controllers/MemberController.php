@@ -26,16 +26,16 @@ class MemberController extends Controller
         $validated = $request->validate([
             'name'            => 'required|string|max:255',
             'gender'          => 'required|in:Laki-laki,Perempuan',
-            'birth_place'     => 'nullable|string|max:100',
-            'birth_date'      => 'nullable|date',
-            'no_ktp'          => ['required', 'digits:16'],
-            'height'          => ['nullable', 'integer', 'min:0'],
-            'weight'          => ['nullable', 'integer', 'min:0'],
-            'phone'           => ['nullable', 'regex:/^[0-9]+$/'],
+            'birth_place'     => 'required|string|max:100',
+            'birth_date'      => 'required|date',
+            'no_ktp'          => 'required|digits:16|unique:members,no_ktp',
+            'height'          => ['required', 'integer', 'min:0'],
+            'weight'          => ['required', 'integer', 'min:0'],
+            'phone'           => ['required', 'regex:/^[0-9]+$/'],
             'email'           => 'required|email|unique:members,email',
             'province_id'     => 'required|integer',
             'regency_id'      => 'required|integer',
-            'graduation_year' => 'nullable|integer|between:2000,2029',
+            'graduation_year' => 'required|integer|between:2000,2029',
             'experience'      => 'nullable|string|max:255',
         ]);
 
@@ -84,16 +84,16 @@ class MemberController extends Controller
         $validated = $request->validate([
             'name'            => 'required|string|max:255',
             'gender'          => 'required|in:Laki-laki,Perempuan',
-            'birth_place'     => 'nullable|string|max:100',
-            'birth_date'      => 'nullable|date',
-            'no_ktp'          => ['required', 'digits:16'],
-            'height'          => ['nullable', 'integer', 'min:0'],
-            'weight'          => ['nullable', 'integer', 'min:0'],
-            'phone'           => ['nullable', 'regex:/^[0-9]+$/'],
+            'birth_place'     => 'required|string|max:100',
+            'birth_date'      => 'required|date',
+            'no_ktp'          => 'required|digits:16|unique:members,no_ktp,' . $member->id,
+            'height'          => ['required', 'integer', 'min:0'],
+            'weight'          => ['required', 'integer', 'min:0'],
+            'phone'           => ['required', 'regex:/^[0-9]+$/'],
             'email'           => 'required|email|unique:members,email,' . $member->id,
             'province_id'     => 'required|integer',
             'regency_id'      => 'required|integer',
-            'graduation_year' => 'nullable|integer|between:2000,2029',
+            'graduation_year' => 'required|integer|between:2000,2029',
             'experience'      => 'nullable|string|max:255',
         ]);
 
@@ -119,5 +119,14 @@ class MemberController extends Controller
         $member->update($data);
 
         return redirect()->route('members.index')->with('success', 'Member berhasil diupdate');
+    }
+    public function destroy(Member $member)
+    {
+        try {
+            $member->delete();
+            return redirect()->route('members.index')->with('success', 'Member berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('members.index')->withErrors(['error' => 'Gagal menghapus member: ' . $e->getMessage()]);
+        }
     }
 }

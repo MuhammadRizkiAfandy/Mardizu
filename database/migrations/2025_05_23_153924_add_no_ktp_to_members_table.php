@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('members', function (Blueprint $table) {
-            $table->string('no_ktp', 16)->nullable()->after('birth_date');
+            $table->string('no_ktp', 16)->unique()->after('birth_date');
         });
     }
 
